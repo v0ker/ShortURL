@@ -14,7 +14,7 @@ var ProviderSet = wire.NewSet(NewRouter)
 func NewRouter(
 	conf *config.Configuration,
 	recovery *middleware.Recovery,
-	userHandler *handler.UserHandler,
+	idHandler *handler.IdHandler,
 ) *gin.Engine {
 	if conf.App.Env == "production" {
 		gin.SetMode(gin.ReleaseMode)
@@ -25,18 +25,8 @@ func NewRouter(
 	// cors config
 	//router.Use(corsM.Handler())
 
-	//apiGroup := router.Group("/api")
-	// account handler
-	//registerAccountHandler(apiGroup.Group("/account"), codeLimiter, localAuthLimiter, accountHandler)
+	apiGroup := router.Group("/api")
+	apiGroup.POST("/id", idHandler.NextId)
 
 	return router
 }
-
-//func registerTalkHandler(group *gin.RouterGroup, auth *middleware.Auth, handler *handler.TalkHandler) {
-//	groupRouter := group.Use(auth.Handler())
-//	groupRouter.POST("/audio/token", handler.CreateAudioRecognitionToken)
-//	groupRouter.POST("/advice", handler.CreateTalkAdvice)
-//	groupRouter.POST("/reply", handler.CreateTalkReply)
-//	groupRouter.POST("/upload/token", handler.CreateUploadToken)
-//	groupRouter.POST("/translate", handler.CreateTranslate)
-//}

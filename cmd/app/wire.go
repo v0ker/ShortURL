@@ -7,6 +7,7 @@ import (
 	"ShortURL/internal/api/handler"
 	"ShortURL/internal/api/middleware"
 	"ShortURL/internal/api/router"
+	"ShortURL/internal/biz"
 	"ShortURL/internal/config"
 	"ShortURL/internal/data"
 	"github.com/google/wire"
@@ -21,6 +22,7 @@ func wireApp(*config.Configuration, *lumberjack.Logger, *zap.Logger) (*App, func
 			handler.ProviderSet,
 			router.ProviderSet,
 			middleware.ProviderSet,
+			biz.ProviderSet,
 			data.ProviderSet,
 			//http and app
 			newHttpServer,

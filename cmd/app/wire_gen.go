@@ -10,6 +10,7 @@ import (
 	"ShortURL/internal/api/handler"
 	"ShortURL/internal/api/middleware"
 	"ShortURL/internal/api/router"
+	"ShortURL/internal/biz"
 	"ShortURL/internal/config"
 	"ShortURL/internal/data"
 	"github.com/natefinch/lumberjack"
@@ -25,9 +26,10 @@ func wireApp(configuration *config.Configuration, lumberjackLogger *lumberjack.L
 	if err != nil {
 		return nil, nil, err
 	}
-	echoData := data.NewEchoData(dataData, zapLogger)
-	userHandler := handler.NewUserHandler(echoData, zapLogger)
-	engine := router.NewRouter(configuration, recovery, userHandler)
+	idData := data.NewIdDbData(dataData, zapLogger)
+	idService := biz.NewIdService(zapLogger, idData)
+	idHandler := handler.NewIdHandler(zapLogger, idService)
+	engine := router.NewRouter(configuration, recovery, idHandler)
 	server := newHttpServer(configuration, engine)
 	app := newApp(configuration, zapLogger, server)
 	return app, func() {
