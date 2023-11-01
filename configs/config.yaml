@@ -1,0 +1,22 @@
+app:
+  env: 'local'
+  port: 8090
+  app_name: 'ShortURL'
+
+log:
+  level: 'debug'
+  log_dir: '~/data/code/go/ShortURL/logs/'
+  filename: 'app.log'
+  max_backups: 3
+  max_size: 500
+  max_age: 30
+  compress: true
+
+database:
+  source: 'root:123456@tcp(127.0.0.1:3306)/short_url?charset=utf8mb4&parseTime=True&loc=Local'
+  max_idle_conns: 8
+  max_open_conns: 32
+
+redis:
+  address: '127.0.0.1:6379'
+  password: ''
