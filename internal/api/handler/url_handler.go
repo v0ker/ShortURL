@@ -9,7 +9,7 @@ import (
 
 type UrlService interface {
 	ShortenUrl(ctx context.Context, url string, ttl int32) (string, error)
-	ExpandUrl(ctx context.Context, url string) (*types.UrlRecord, error)
+	ExpandUrl(ctx context.Context, shortenId string) (*types.UrlRecord, error)
 }
 
 type UrlHandler struct {
@@ -46,6 +46,19 @@ func (u UrlHandler) ShortenUrl(ctx *gin.Context) {
 		"code": 200,
 		"data": url,
 	})
+}
+
+func (u UrlHandler) ExpandUrl(ctx *gin.Context) {
+	id := ctx.Param("id")
+	url, err := u.urlService.ExpandUrl(ctx, id)
+	if err != nil {
+		ctx.JSON(500, gin.H{
+			"code":    500,
+			"message": err.Error(),
+		})
+		return
+	}
+	ctx.Redirect(302, url.Url)
 }
 
 type UrlRequest struct {

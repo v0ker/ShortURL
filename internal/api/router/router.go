@@ -27,8 +27,10 @@ func NewRouter(
 	//router.Use(corsM.Handler())
 
 	apiGroup := router.Group("/api")
-	// only for test
-	apiGroup.POST("/id", idHandler.NextId)
+	//apiGroup.POST("/id", idHandler.NextId) // only for test
 	apiGroup.POST("/url", urlHandler.ShortenUrl)
+
+	shortenGroup := router.Group("/s")
+	shortenGroup.GET("/:id", urlHandler.ExpandUrl)
 	return router
 }

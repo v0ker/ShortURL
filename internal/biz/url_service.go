@@ -51,7 +51,14 @@ func (u UrlService) ShortenUrl(ctx context.Context, url string, ttl int32) (stri
 	return shortenUrl, err
 }
 
-func (u UrlService) ExpandUrl(ctx context.Context, url string) (*types.UrlRecord, error) {
-	//TODO implement me
-	panic("implement me")
+func (u UrlService) ExpandUrl(ctx context.Context, shortenId string) (*types.UrlRecord, error) {
+	realId := utils.String2Int(shortenId)
+	if realId == 0 {
+		return nil, fmt.Errorf("invalid shorten id")
+	}
+	urlRecord, err := u.urlData.GetByCode(ctx, realId)
+	if err != nil {
+		return nil, err
+	}
+	return urlRecord, nil
 }
