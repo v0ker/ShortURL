@@ -3,4 +3,4 @@ package data
 import "github.com/google/wire"
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewIdDbData)
+var ProviderSet = wire.NewSet(NewData, NewIdDbData, NewUrlRecordData)

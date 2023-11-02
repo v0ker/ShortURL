@@ -15,6 +15,7 @@ func NewRouter(
 	conf *config.Configuration,
 	recovery *middleware.Recovery,
 	idHandler *handler.IdHandler,
+	urlHandler *handler.UrlHandler,
 ) *gin.Engine {
 	if conf.App.Env == "production" {
 		gin.SetMode(gin.ReleaseMode)
@@ -28,5 +29,6 @@ func NewRouter(
 	apiGroup := router.Group("/api")
 	// only for test
 	apiGroup.POST("/id", idHandler.NextId)
+	apiGroup.POST("/url", urlHandler.ShortenUrl)
 	return router
 }

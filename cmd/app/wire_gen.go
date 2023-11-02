@@ -29,7 +29,10 @@ func wireApp(configuration *config.Configuration, lumberjackLogger *lumberjack.L
 	idData := data.NewIdDbData(dataData, zapLogger)
 	idService := biz.NewIdService(zapLogger, idData)
 	idHandler := handler.NewIdHandler(zapLogger, idService)
-	engine := router.NewRouter(configuration, recovery, idHandler)
+	urlData := data.NewUrlRecordData(dataData, zapLogger)
+	urlService := biz.NewUrlService(urlData, idData, zapLogger)
+	urlHandler := handler.NewUrlHandler(zapLogger, urlService)
+	engine := router.NewRouter(configuration, recovery, idHandler, urlHandler)
 	server := newHttpServer(configuration, engine)
 	app := newApp(configuration, zapLogger, server)
 	return app, func() {
