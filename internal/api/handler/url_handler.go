@@ -52,13 +52,10 @@ func (u UrlHandler) ExpandUrl(ctx *gin.Context) {
 	id := ctx.Param("id")
 	url, err := u.urlService.ExpandUrl(ctx, id)
 	if err != nil {
-		ctx.JSON(500, gin.H{
-			"code":    500,
-			"message": err.Error(),
-		})
-		return
+		ctx.HTML(500, "error.html", "Server Error")
+	} else {
+		ctx.Redirect(302, url.Url)
 	}
-	ctx.Redirect(302, url.Url)
 }
 
 type UrlRequest struct {

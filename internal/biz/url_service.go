@@ -60,5 +60,11 @@ func (u UrlService) ExpandUrl(ctx context.Context, shortenId string) (*types.Url
 	if err != nil {
 		return nil, err
 	}
+	if urlRecord == nil {
+		return nil, fmt.Errorf("url not found")
+	}
+	if urlRecord.Created.Add(time.Duration(urlRecord.Ttl) * time.Second).Before(time.Now()) {
+		return nil, fmt.Errorf("url expired")
+	}
 	return urlRecord, nil
 }
