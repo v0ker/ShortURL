@@ -95,3 +95,4 @@ app.log
 bin/
 logs/
 books/
+app
