@@ -20,3 +20,7 @@ database:
 redis:
   address: '127.0.0.1:6379'
   password: ''
+
+url:
+  domain: 'http://localhost:8090'
+  min_length: 6

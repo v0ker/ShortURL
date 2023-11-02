@@ -2,9 +2,11 @@ package biz
 
 import (
 	"ShortURL/internal/api/handler"
+	"ShortURL/internal/config"
 	"ShortURL/internal/types"
 	"ShortURL/internal/utils"
 	"context"
+	"fmt"
 	"go.uber.org/zap"
 	"time"
 )
@@ -15,16 +17,18 @@ type UrlData interface {
 }
 
 type UrlService struct {
-	urlData UrlData
-	idData  IdData
-	log     *zap.Logger
+	urlData   UrlData
+	idData    IdData
+	log       *zap.Logger
+	urlConfig config.UrlConfig
 }
 
-func NewUrlService(data UrlData, idData IdData, log *zap.Logger) handler.UrlService {
+func NewUrlService(data UrlData, idData IdData, config *config.Configuration, log *zap.Logger) handler.UrlService {
 	return &UrlService{
-		urlData: data,
-		idData:  idData,
-		log:     log,
+		urlData:   data,
+		idData:    idData,
+		urlConfig: config.Url,
+		log:       log,
 	}
 }
 
@@ -43,8 +47,8 @@ func (u UrlService) ShortenUrl(ctx context.Context, url string, ttl int32) (stri
 		Created: time.Now(),
 	}
 	err = u.urlData.Create(ctx, urlRecord)
-	//TODO: domain/s/url_shorten_code
-	return utils.Int2String(codeId, 4), err
+	shortenUrl := fmt.Sprintf("%s/s/%s", u.urlConfig.Domain, utils.Int2String(codeId, u.urlConfig.MinLength))
+	return shortenUrl, err
 }
 
 func (u UrlService) ExpandUrl(ctx context.Context, url string) (*types.UrlRecord, error) {
