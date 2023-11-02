@@ -44,7 +44,7 @@ func (u UrlService) ShortenUrl(ctx context.Context, url string, ttl int32) (stri
 	}
 	err = u.urlData.Create(ctx, urlRecord)
 	//TODO: domain/s/url_shorten_code
-	return utils.Int2String(codeId), err
+	return utils.Int2String(codeId, 4), err
 }
 
 func (u UrlService) ExpandUrl(ctx context.Context, url string) (*types.UrlRecord, error) {

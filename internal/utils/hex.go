@@ -2,12 +2,17 @@ package utils
 
 var mapping = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
-func Int2String(code int64) string {
+func Int2String(code int64, minLength int32) string {
 	//map int to a-zA-Z0-9
 	var result string
 	for code > 0 {
 		result = string(mapping[code%62]) + result
 		code /= 62
+	}
+	if int32(len(result)) < minLength {
+		for i := int32(len(result)); i < minLength; i++ {
+			result = string(mapping[0]) + result
+		}
 	}
 	return result
 }

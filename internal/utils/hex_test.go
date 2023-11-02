@@ -7,11 +7,11 @@ import (
 
 func TestInt2String(t *testing.T) {
 	var num = int64(35)
-	var result = Int2String(num)
-	assert.Equal(t, result, "J")
+	var result = Int2String(num, 5)
+	assert.Equal(t, result, "aaaaJ")
 	num = 125
-	result = Int2String(num)
-	assert.Equal(t, result, "cb")
+	result = Int2String(num, 5)
+	assert.Equal(t, result, "aaacb")
 }
 
 func TestString2Int(t *testing.T) {
