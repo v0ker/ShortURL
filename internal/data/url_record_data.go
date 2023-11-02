@@ -1,6 +1,7 @@
 package data
 
 import (
+	"ShortURL/internal/biz"
 	"ShortURL/internal/types"
 	"ShortURL/internal/utils"
 	"context"
@@ -16,15 +17,19 @@ type UrlRecordData struct {
 	log  *zap.Logger
 }
 
-func NewUrlRecordData(data *Data, log *zap.Logger) *UrlRecordData {
+func NewUrlRecordData(data *Data, log *zap.Logger) biz.UrlData {
 	return &UrlRecordData{
 		data: data,
 		log:  log,
 	}
 }
 
-func (u UrlRecordData) Create(urlRecord *types.UrlRecord) error {
+func (u UrlRecordData) Create(ctx context.Context, urlRecord *types.UrlRecord) error {
 	result := u.data.db.Create(urlRecord)
+	if result.Error == nil {
+		// clear cache
+		_ = u.clearCache(ctx, urlRecord)
+	}
 	return result.Error
 }
 
@@ -59,6 +64,13 @@ func (u UrlRecordData) getByCodeFomCache(ctx context.Context, code int64) (*type
 	} else {
 		return nil, cmd.Err()
 	}
+}
+
+func (u UrlRecordData) clearCache(ctx context.Context, record *types.UrlRecord) error {
+	if record == nil {
+		return nil
+	}
+	return u.data.rdb.Del(ctx, u.codeCacheKey(record.Code)).Err()
 }
 
 func (u UrlRecordData) setUrlRecordToCache(ctx context.Context, urlRecord *types.UrlRecord) error {

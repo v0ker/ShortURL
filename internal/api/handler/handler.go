@@ -4,4 +4,4 @@ import (
 	"github.com/google/wire"
 )
 
-var ProviderSet = wire.NewSet(NewIdHandler)
+var ProviderSet = wire.NewSet(NewIdHandler, NewUrlHandler)
